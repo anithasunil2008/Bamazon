@@ -97,6 +97,14 @@ function inquireSecondQuestion() {
                     console.log("\nThank you for placing an order with us.");
                 });
 
+                connection.query('Select * FROM products WHERE item_id = ?', [selectedItem], function(err, res) {
+                    if (err) throw err;
+
+                    for (var i = 0; i < res.length; i++) {
+                        var totalCost = units * res[i].price;
+                        console.log("Your total cost: $" + totalCost);
+                    }
+                })
             });
     }
 }
