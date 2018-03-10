@@ -1,7 +1,12 @@
 var mysql = require('mysql');
 var inquirer = require("inquirer");
+var consoletable = require("console.table");
 var selectedItem;
 var oldStock;
+var productSale;
+var totalCost;
+var updateProductSale;
+
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -23,19 +28,13 @@ function StartApp() {
     return new Promise(function(resolve, reject) {
         connection.query("Select * FROM products", function(err, res) {
             if (err) reject(err);
-            for (var i = 0; i < res.length; i++) {
-                console.log("ID : " + res[i].item_id + " | " + "Name : " + res[i].product_name + " | " + "Department Name: " + res[i].department_name + " | " +
-                    "Price: " + res[i].price + " | " + "Quantity: " + res[i].stock_quantity);
-                console.log("\n");
-            }
+            console.table(res);
             resolve(res);
         });
     });
 }
 
-
 StartApp().then(function(data) {
-
     inquireQuestions();
 });
 
@@ -55,22 +54,15 @@ function inquireQuestions() {
                     console.log("\n");
                     console.log("Your selected product details:");
                     console.log("\n");
-
+                    console.table(res);
                     res.forEach(element => {
                         selectedItem = element.item_id;
                         oldStock = element.stock_quantity;
-
-                        console.log("ID : " + element.item_id + " | " + "Name : " + element.product_name + " | " + "Department Name: " + element.department_name + " | " +
-                            "Price: " + element.price + " | " + "Quantity: " + element.stock_quantity);
-                        console.log("\n");
                     });
                     resolve();
                 }
-
             );
-
         });
-
     }).then(function() {
         inquireSecondQuestion();
     });
@@ -101,10 +93,22 @@ function inquireSecondQuestion() {
                     if (err) throw err;
 
                     for (var i = 0; i < res.length; i++) {
-                        var totalCost = units * res[i].price;
+                        totalCost = units * res[i].price;
+                        productSale = res[i].product_sales;
+
+                        // console.log("product_sales:" + productSale);
                         console.log("Your total cost: $" + totalCost);
                     }
-                })
+                    updateProductSale = (productSale + totalCost);
+                    connection.query("UPDATE products set product_sales =?  WHERE item_id = ?", [updateProductSale, selectedItem], function(err, result) {
+                        // console.log("Record Updated!!");
+                        // console.table(result);
+                        // console.log("Total cost of product sale: " + updateProductSale);
+                    });
+                });
+
+
             });
     }
+
 }

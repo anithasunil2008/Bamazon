@@ -2,6 +2,8 @@ var mysql = require('mysql');
 var inquirer = require("inquirer");
 var consoletable = require("console.table");
 
+
+
 var connection = mysql.createConnection({
     host: "localhost",
     post: 3306,
@@ -31,19 +33,17 @@ function startManagerApp() {
                 viewLowInventory();
             } else if (answer.command === "Add to Inventory") {
                 addToInventory();
-            } else(answer.command === "Add New Product")
-            addNewProduct();
+            } else if (answer.command === "Add New Product") {
+                addNewProduct();
+            }
         })
 }
 
 function viewProduct() {
     connection.query("Select * FROM products", function(err, res) {
         if (err) throw err;
-        for (var i = 0; i < res.length; i++) {
-            console.table("ID : " + res[i].item_id + " | " + "Name : " + res[i].product_name + " | " + "Department Name: " + res[i].department_name + " | " +
-                "Price: " + res[i].price + " | " + "Quantity: " + res[i].stock_quantity);
-            console.log("\n");
-        }
+        console.log('\n');
+        console.table(res);
     });
 }
 
@@ -51,11 +51,7 @@ function viewLowInventory() {
     connection.query("Select * FROM products WHERE stock_quantity between '0' and '10' ", function(err, res) {
         if (err) throw err;
         console.log("\n");
-        res.forEach(element => {
-            console.table("ID : " + element.item_id + " | " + "Name : " + element.product_name + " | " + "Department Name: " + element.department_name + " | " +
-                "Price: " + element.price + " | " + "Quantity: " + element.stock_quantity);
-            console.log("\n");
-        });
+        console.table(res);
     })
 }
 
