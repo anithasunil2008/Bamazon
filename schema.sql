@@ -17,7 +17,7 @@ insert into products (product_name, department_name, price, stock_quantity)
 	values
 		('Echo Dot', 'Electronic', 50, 14),
         ('Kindle', 'Electronic', 100, 10),
-        ('Scooters', 'Sports', 150, 60),
+     ('Scooters', 'Sports', 150, 60),
         ('HeadPhones', 'Music', 40, 50),
         ('Magazines', 'Books', 30, 65),
         ('Tablets', 'Electronics', 135, 45),

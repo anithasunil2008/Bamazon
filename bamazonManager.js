@@ -102,6 +102,7 @@ function addNewProduct() {
 
             }, function(err, res) {
                 if (err) throw err;
+                console.log("\n");
                 console.log(res.affectedRows + " Product Inserted \n");
             });
 
