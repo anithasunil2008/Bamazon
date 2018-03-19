@@ -16,7 +16,7 @@ var connection = mysql.createConnection({
     database: "bamazon"
 });
 
-function StartApp() {
+function startApp() {
     console.log("\n");
     console.log("                                                                       ********************                     ");
     console.log("                                                                        Welcome to Bamazon                       ");
@@ -34,7 +34,7 @@ function StartApp() {
     });
 }
 
-StartApp().then(function(data) {
+startApp().then(function(data) {
     inquireQuestions();
 });
 
@@ -68,17 +68,20 @@ function inquireQuestions() {
     });
 }
 
-function inquireSecondQuestion() {
-    if (oldStock == 0) {
+function inquireSecondQuestion(product) {
 
-        console.log("I'm sorry, we are out of stock.");
-    } else {
-        inquirer.prompt({
-                name: "quantity",
-                type: "input",
-                message: "How many units of the product you would like to buy?"
-            })
-            .then(function(answer) {
+    inquirer.prompt({
+            name: "quantity",
+            type: "input",
+            message: "How many units of the product you would like to buy?"
+        })
+        .then(function(answer) {
+            if (answer.quantity > oldStock) {
+                console.log("\n");
+                console.log("I'm sorry, we are out of stock.");
+                console.log("\n");
+                process.exit();
+            } else {
                 var units = answer.quantity;
 
                 var newStock = oldStock - units;
@@ -87,6 +90,8 @@ function inquireSecondQuestion() {
 
                 var query = connection.query(sql, [newStock, selectedItem], function(err, res) {
                     console.log("\nThank you for placing an order with us.");
+                    console.log("\n");
+                    process.exit();
                 });
 
                 connection.query('Select * FROM products WHERE item_id = ?', [selectedItem], function(err, res) {
@@ -100,15 +105,8 @@ function inquireSecondQuestion() {
                         console.log("Your total cost: $" + totalCost);
                     }
                     updateProductSale = (productSale + totalCost);
-                    connection.query("UPDATE products set product_sales =?  WHERE item_id = ?", [updateProductSale, selectedItem], function(err, result) {
-                        // console.log("Record Updated!!");
-                        // console.table(result);
-                        // console.log("Total cost of product sale: " + updateProductSale);
-                    });
+                    connection.query("UPDATE products set product_sales =?  WHERE item_id = ?", [updateProductSale, selectedItem], function(err, result) {});
                 });
-
-
-            });
-    }
-
+            }
+        });
 }

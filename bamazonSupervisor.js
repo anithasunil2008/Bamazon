@@ -53,6 +53,7 @@ function newDepartment() {
             if (err) throw err;
             console.log("\n");
             console.log(res.affectedRows + " Product Inserted \n");
+            process.exit();
         });
     });
 }
@@ -63,5 +64,6 @@ function viewDepartment() {
         if (err) throw err;
         console.log("\n");
         console.table(response);
+        process.exit();
     });
 }

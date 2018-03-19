@@ -44,14 +44,16 @@ function viewProduct() {
         if (err) throw err;
         console.log('\n');
         console.table(res);
+        process.exit();
     });
 }
 
 function viewLowInventory() {
-    connection.query("Select * FROM products WHERE stock_quantity between '0' and '10' ", function(err, res) {
+    connection.query("Select * FROM products WHERE stock_quantity between '0' and '20' ", function(err, res) {
         if (err) throw err;
         console.log("\n");
         console.table(res);
+        process.exit();
     })
 }
 
@@ -71,6 +73,7 @@ function addToInventory() {
 
             var query = connection.query(sql, [answer.quantity, answer.id], function(err, result) {
                 console.log("Updated!!");
+                process.exit();
             });
         });
 }
@@ -104,6 +107,7 @@ function addNewProduct() {
                 if (err) throw err;
                 console.log("\n");
                 console.log(res.affectedRows + " Product Inserted \n");
+                process.exit();
             });
 
             console.log(query.sql);
